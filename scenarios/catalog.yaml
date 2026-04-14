@@ -1,0 +1,81 @@
+scenarios:
+
+  Base:
+    description: "Normal operating conditions"
+    horizon:
+      granularity: weekly
+      periods: 52
+    demand:
+      shock_pct: 0.0
+      shock_start_period: 99
+      shock_duration_periods: 0
+    lead_time:
+      mode: range
+      range_days: [7, 14]
+    reorder_policy:
+      policy: minmax
+      minmax:
+        min_days_of_supply: 14
+        max_days_of_supply: 42
+
+  Conservative:
+    description: "Slightly elevated lead times, mild demand uptick"
+    horizon:
+      granularity: weekly
+      periods: 52
+    demand:
+      shock_pct: 0.10
+      shock_start_period: 10
+      shock_duration_periods: 6
+    lead_time:
+      mode: distribution
+      distribution:
+        mean_days: 18
+        std_days: 4
+        min_days: 7
+    reorder_policy:
+      policy: minmax
+      minmax:
+        min_days_of_supply: 21
+        max_days_of_supply: 49
+
+  Stress:
+    description: "Significant demand spike + long lead times"
+    horizon:
+      granularity: weekly
+      periods: 52
+    demand:
+      shock_pct: 0.35
+      shock_start_period: 8
+      shock_duration_periods: 10
+    lead_time:
+      mode: distribution
+      distribution:
+        mean_days: 28
+        std_days: 7
+        min_days: 14
+    reorder_policy:
+      policy: minmax
+      minmax:
+        min_days_of_supply: 14
+        max_days_of_supply: 42
+
+  BlackSwan:
+    description: "Extreme demand shock + supply disruption, ROP policy"
+    horizon:
+      granularity: weekly
+      periods: 52
+    demand:
+      shock_pct: 0.75
+      shock_start_period: 5
+      shock_duration_periods: 15
+    lead_time:
+      mode: distribution
+      distribution:
+        mean_days: 45
+        std_days: 14
+        min_days: 21
+    reorder_policy:
+      policy: rop
+      rop:
+        review_period_days: 7
