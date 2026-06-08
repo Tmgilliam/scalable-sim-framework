@@ -7,9 +7,9 @@ class SKUParams:
     sku: str
     starting_on_hand: int
     weekly_demand: float
-    unit_cost: float
-    lead_time_days: int
     safety_stock: int
+    unit_cost: float = 0.0
+    lead_time_days: int = 7
     initial_on_order: int = 0
 
 

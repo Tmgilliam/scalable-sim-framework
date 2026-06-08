@@ -8,7 +8,7 @@ from pathlib import Path
 from src.sim.data_loader import load_skus_csv
 from src.sim.scenario import build_scenario_config
 from src.sim.sim_engine import simulate_inventory_weekly
-from src.utils.run_utils import make_run_dir
+from src.utils.run_utils import make_scenario_run_dir
 
 
 def main() -> None:
@@ -25,7 +25,7 @@ def main() -> None:
         seed=args.seed,
     )
 
-    run_dir = make_run_dir(
+    run_dir = make_scenario_run_dir(
         base_dir="runs",
         scenario_name=sc.scenario_name,
         cfg_hash=sc.config_hash,

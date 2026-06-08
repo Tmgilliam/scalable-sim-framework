@@ -189,3 +189,91 @@ streamlit run dashboard/app.py
 
 A successful run will print aggregated p10/p50/p90 metrics for
 fill rate, stockout days, and average inventory.
+
+---
+
+## 5. Convergence merge with the standalone GitHub repo
+
+After the first monorepo commit (`0daa24d` on
+`Tmgilliam/MTP-Projects`) was pushed, a second pass merged the
+existing standalone repository at
+`github.com/Tmgilliam/scalable-sim-framework` back into this directory
+so the two histories converge. The standalone repo carried real work
+that did not exist in the monorepo working tree.
+
+### Pre-merge state of the standalone repo
+
+Commit history:
+```
+3d3ff22 docs: add README with Mermaid architecture diagram + recruiter framing
+97d4874 feat: milestone 4 — decision-ready reporting pack
+f71debd feat: initial commit — Scalable Sim Framework v1
+```
+
+Files unique to the standalone (not present in the local monorepo):
+- `Dockerfile` — Vertex AI Custom Jobs container build
+- `PLAYBOOK.md` — v1 operations runbook
+- `main.py` — v1 CLI entry point (local runs + Vertex submission)
+- `batch_runner.py` — v1 scenario × seed orchestrator at repo root
+- `cloud/gcs_mirror.py`, `cloud/vertex_job.py` — v1 GCS upload +
+  Vertex AI Custom Job wrapper
+- `reports/build_notebook.py`, `reports/exec_summary.ipynb`, and
+  three pre-rendered PNG charts — the "Milestone 4" reporting pack
+- `scenarios/catalog.yaml` — v1-flavored scenario catalog (at
+  repo root, distinct from the v2 catalog at
+  `configs/scenarios/catalog.yaml`)
+- `runs/registry.csv` — v1 batch registry (distinct from the v2
+  `registry/run_registry.csv`)
+- The recruiter-facing README with badges, Mermaid architecture
+  diagram, and roadmap.
+
+### Merge actions taken (non-destructive)
+
+- **`src/sim/inventory_types.py`** — added defaults for `unit_cost`
+  and `lead_time_days` and reordered fields so that the v1
+  `batch_runner.py` (which constructs `SKUParams(sku=..., weekly_demand=...,
+  starting_on_hand=..., safety_stock=...)`) works against the same
+  module that the v2 CSV loader uses (which still passes the full
+  set of fields by keyword).
+- **`src/utils/run_utils.py`** — renamed the v2 scenario-aware
+  helper to `make_scenario_run_dir(base_dir, scenario_name, cfg_hash)`
+  and reinstated the v1 helper as the canonical `make_run_dir(base="runs")`.
+  Both signatures now coexist in the same module. Added
+  `save_run_config`, `save_run_results`, and `run_id_from_dir`
+  required by the v1 batch runner.
+- **`src/sim/run_simulation.py`** and **`src/sim/run_scenario.py`** —
+  updated to call `make_scenario_run_dir(...)` since they need the
+  scenario-aware naming for the regression-guard test.
+- **`README.md`** — replaced the v2-only README with a merged
+  version that preserves the standalone's polished recruiter
+  framing (badges, scenario table, Mermaid architecture) and adds
+  a v2 section showing the new layers (simulation/, vertex/,
+  dashboard/, docs/, portfolio/) plus an updated tech-stack table
+  and roadmap with completed items.
+- **`.gitignore`** — replaced with the union of the v1 standalone
+  ignore set and the v2 additions.
+- Brought the following v1-only files in unchanged: `Dockerfile`,
+  `PLAYBOOK.md`, `main.py`, `batch_runner.py`, `cloud/`,
+  `reports/` (including the executed notebook and PNG charts),
+  `scenarios/catalog.yaml`, `runs/registry.csv`.
+
+### What was preserved on both sides
+
+- Every v1-era source file (the engine, the run history, the
+  reports notebook + charts, the cloud adapters, the operations
+  playbook).
+- Every v2-era addition (the Pydantic Monte Carlo engine, the
+  Vertex AI pipeline component with local fallback, the Streamlit
+  dashboard, the Azure architecture doc, the portfolio artifacts).
+- All git history on both sides — the published-to-standalone
+  commit is a true merge whose parents are the v1 standalone HEAD
+  and the v2 monorepo subtree.
+
+### Verification after merge
+
+- `pytest -v` — full test suite passing.
+- `python main.py --scenarios Base --seeds 42` — v1 CLI works.
+- `python -m simulation.scenarios --scenario baseline` — v2 CLI works.
+- `python -m vertex.pipeline --scenario combined_stress` — v2 Vertex
+  local executor works.
+- Lint clean on `simulation/`, `vertex/`, `dashboard/`.
