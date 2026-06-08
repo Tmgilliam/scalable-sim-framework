@@ -1,0 +1,5 @@
+sku,starting_on_hand,weekly_demand,unit_cost,lead_time_days,safety_stock,initial_on_order
+SKU_001,500,120,10,10,150,0
+SKU_002,200,80,25,14,100,0
+SKU_003,800,200,5,7,250,0
+

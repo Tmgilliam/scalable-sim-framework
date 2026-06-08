@@ -1,0 +1,9 @@
+# Project-local exclusions. The parent monorepo .gitignore also covers
+# __pycache__/, .pytest_cache/, .venv/, .env, IDE files — no need to repeat.
+
+# Local Vertex AI component sandbox (transient artifacts from
+# `python -m vertex.pipeline ...` runs; per-developer, not provenance).
+runs/vertex_local/
+
+# Streamlit local config (per-developer)
+.streamlit/secrets.toml

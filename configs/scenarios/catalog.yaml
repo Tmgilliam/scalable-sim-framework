@@ -1,0 +1,94 @@
+version: 1
+
+defaults:
+  horizon:
+    granularity: "weekly"     # "daily" or "weekly"
+    periods: 26               # number of weeks (or days if daily)
+    start_date: "2026-03-02"
+
+  demand:
+    shock_pct: 0.0            # +/- percent change to baseline demand
+    shock_start_period: 1     # start period index (1-based)
+    shock_duration_periods: 26
+
+  lead_time:
+    mode: "range"             # "range" or "distribution"
+    range_days: [7, 14]       # inclusive min/max
+    distribution:             # used only if mode="distribution"
+      name: "normal"
+      mean_days: 10
+      std_days: 2
+      min_days: 1
+
+  service_level:
+    fill_rate_target: 0.95
+
+  reorder_policy:
+    policy: "minmax"          # "rop" | "eoq" | "minmax"
+    rop:
+      review_period_days: 7
+    eoq:
+      ordering_cost: 50
+      holding_cost_pct: 0.20
+    minmax:
+      min_days_of_supply: 10
+      max_days_of_supply: 25
+
+scenarios:
+  Base:
+    description: "Baseline assumptions. No demand shock."
+    overrides:
+      demand:
+        shock_pct: 0.00
+      lead_time:
+        mode: "range"
+        range_days: [7, 14]
+      service_level:
+        fill_rate_target: 0.95
+      reorder_policy:
+        policy: "minmax"
+
+  Conservative:
+    description: "Slightly worse lead time + slight demand uptick."
+    overrides:
+      demand:
+        shock_pct: 0.05
+      lead_time:
+        mode: "range"
+        range_days: [10, 18]
+      service_level:
+        fill_rate_target: 0.97
+
+  Stress:
+    description: "Demand spike + unstable lead time."
+    overrides:
+      demand:
+        shock_pct: 0.20
+      lead_time:
+        mode: "distribution"
+        distribution:
+          name: "normal"
+          mean_days: 16
+          std_days: 5
+          min_days: 3
+      service_level:
+        fill_rate_target: 0.98
+
+  BlackSwan:
+    description: "Demand surge + extreme lead time volatility."
+    overrides:
+      demand:
+        shock_pct: 0.50
+      lead_time:
+        mode: "distribution"
+        distribution:
+          name: "normal"
+          mean_days: 28
+          std_days: 10
+          min_days: 7
+      service_level:
+        fill_rate_target: 0.99
+      reorder_policy:
+        policy: "rop"
+        rop:
+          review_period_days: 3

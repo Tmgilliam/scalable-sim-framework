@@ -1,0 +1,46 @@
+{
+  "demand": {
+    "shock_duration_periods": 26,
+    "shock_pct": 0.5,
+    "shock_start_period": 1
+  },
+  "horizon": {
+    "granularity": "weekly",
+    "periods": 26,
+    "start_date": "2026-03-02"
+  },
+  "lead_time": {
+    "distribution": {
+      "mean_days": 28,
+      "min_days": 7,
+      "name": "normal",
+      "std_days": 10
+    },
+    "mode": "distribution",
+    "range_days": [
+      7,
+      14
+    ]
+  },
+  "reorder_policy": {
+    "eoq": {
+      "holding_cost_pct": 0.2,
+      "ordering_cost": 50
+    },
+    "minmax": {
+      "max_days_of_supply": 25,
+      "min_days_of_supply": 10
+    },
+    "policy": "rop",
+    "rop": {
+      "review_period_days": 3
+    }
+  },
+  "run": {
+    "scenario": "BlackSwan",
+    "seed": 42
+  },
+  "service_level": {
+    "fill_rate_target": 0.99
+  }
+}

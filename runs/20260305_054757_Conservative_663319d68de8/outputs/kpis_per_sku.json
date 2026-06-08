@@ -1,0 +1,32 @@
+[
+  {
+    "sku": "SKU_001",
+    "periods": 26,
+    "demand_total": 3276.0,
+    "demand_fulfilled": 2948.0,
+    "backorder_units": 328.0,
+    "stockout_periods": 6,
+    "safety_stock_breaches": 18,
+    "fill_rate": 0.8998778998778999
+  },
+  {
+    "sku": "SKU_002",
+    "periods": 26,
+    "demand_total": 2184.0,
+    "demand_fulfilled": 2104.0,
+    "backorder_units": 80.0,
+    "stockout_periods": 5,
+    "safety_stock_breaches": 20,
+    "fill_rate": 0.9633699633699634
+  },
+  {
+    "sku": "SKU_003",
+    "periods": 26,
+    "demand_total": 5460.0,
+    "demand_fulfilled": 5170.0,
+    "backorder_units": 290.0,
+    "stockout_periods": 3,
+    "safety_stock_breaches": 15,
+    "fill_rate": 0.9468864468864469
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "backorder_units": 550.0,
+  "demand_fulfilled": 10370.0,
+  "demand_total": 10920.0,
+  "fill_rate": 0.9496336996336996,
+  "periods": 26,
+  "safety_stock_breaches": 47,
+  "stockout_periods": 10
+}
